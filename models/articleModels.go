@@ -6,5 +6,6 @@ type Article struct {
 	gorm.Model
 	UserID uint
 	Title  string
+	Tag    string
 	Desc   string
 }

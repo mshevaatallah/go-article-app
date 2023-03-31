@@ -10,6 +10,7 @@ func CreateArticle(c *gin.Context) {
 	var body struct {
 		Title string
 		Desc  string
+		Tag   string
 	}
 
 	if c.Bind(&body) != nil {
@@ -23,7 +24,7 @@ func CreateArticle(c *gin.Context) {
 	//
 	//fmt.Println(userid)
 
-	article := models.Article{Title: body.Title, Desc: body.Desc, UserID: c.GetUint("user_id")}
+	article := models.Article{Title: body.Title, Tag: body.Tag, Desc: body.Desc, UserID: c.GetUint("user_id")}
 	result := initializers.DB.Create(&article)
 
 	if result.Error != nil {
