@@ -49,3 +49,35 @@ func GetByTag(c *gin.Context) {
 		"data":   items,
 	})
 }
+
+func UpdateArticle(c *gin.Context) {
+	id := c.Param("id")
+	var body struct {
+		Title string
+		Tag   string
+		Desc  string
+	}
+	if c.Bind(&body) != nil {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "invalid request body",
+		})
+		return
+	}
+
+	err := initializers.DB.Where("id = ?", id).First(&models.Article{}).Error
+	if err != nil {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "article not found",
+		})
+		return
+	}
+
+	initializers.DB.Model(&models.Article{}).Where("id = ?", id).Updates(models.Article{Title: body.Title, Tag: body.Tag, Desc: body.Desc})
+	c.JSON(200, gin.H{
+		"status":  "success",
+		"message": "article updated",
+		"data":    body,
+	})
+}

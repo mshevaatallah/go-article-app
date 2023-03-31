@@ -20,6 +20,7 @@ func main() {
 	r.GET("/article/:tag", middleware.RequireAuth, controllers.GetByTag)
 	r.POST("/logout", middleware.RequireAuth, controllers.Logout)
 	r.POST("/article", middleware.RequireAuth, controllers.CreateArticle)
+	r.PUT("/article/:id", middleware.RequireAuth, controllers.UpdateArticle)
 
 	r.Run()
 
