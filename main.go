@@ -17,6 +17,7 @@ func main() {
 	r.POST("/register", controllers.Signup)
 	r.POST("/login", controllers.Login)
 	r.GET("/article", middleware.RequireAuth, controllers.Profile)
+	r.GET("/article/:tag", middleware.RequireAuth, controllers.GetByTag)
 	r.POST("/logout", middleware.RequireAuth, controllers.Logout)
 	r.POST("/article", middleware.RequireAuth, controllers.CreateArticle)
 

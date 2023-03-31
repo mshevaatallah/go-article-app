@@ -39,3 +39,13 @@ func CreateArticle(c *gin.Context) {
 		"message": "user created",
 	})
 }
+
+func GetByTag(c *gin.Context) {
+	tag := c.Param("tag")
+	items := []models.Article{}
+	initializers.DB.Where("tag LIKE ?", "%"+tag+"%").Find(&items)
+	c.JSON(200, gin.H{
+		"status": "succes",
+		"data":   items,
+	})
+}
