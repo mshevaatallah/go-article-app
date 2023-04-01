@@ -57,6 +57,8 @@ func UpdateArticle(c *gin.Context) {
 		Tag   string
 		Desc  string
 	}
+
+	var items models.Article
 	if c.Bind(&body) != nil {
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -65,11 +67,19 @@ func UpdateArticle(c *gin.Context) {
 		return
 	}
 
-	err := initializers.DB.Where("id = ?", id).First(&models.Article{}).Error
+	err := initializers.DB.First(&items, "id = ?", id).Error
 	if err != nil {
 		c.JSON(400, gin.H{
 			"status":  "error",
 			"message": "article not found",
+		})
+		return
+	}
+
+	if c.GetUint("user_id") != items.UserID {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "you can't update this article",
 		})
 		return
 	}
@@ -80,4 +90,25 @@ func UpdateArticle(c *gin.Context) {
 		"message": "article updated",
 		"data":    body,
 	})
+}
+
+func GetArticleByUser(c *gin.Context) {
+	var user models.User
+	user_id := c.GetUint("user_id")
+
+	//item := initializers.DB.Where("id = ?", user_id).Preload("Articles", "user_id = ?", user_id).Find(&user)
+	item := initializers.DB.Model(&models.User{}).Where("id = ?", user_id).Preload("Articles").Find(&user)
+	if item.Error != nil {
+		c.JSON(400, gin.H{
+			"status":  "error",
+			"message": "fail",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"status": "success",
+		"data":   user,
+	})
+
 }
