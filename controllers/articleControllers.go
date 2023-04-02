@@ -112,3 +112,14 @@ func GetArticleByUser(c *gin.Context) {
 	})
 
 }
+
+func AdminDelete(c *gin.Context) {
+	id := c.Param("id")
+	var items models.Article
+	initializers.DB.First(&items, "id = ?", id).Delete(&items)
+	c.JSON(200, gin.H{
+		"status":  "success",
+		"message": "article deleted",
+		"data":    items,
+	})
+}

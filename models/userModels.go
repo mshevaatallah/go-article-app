@@ -12,5 +12,6 @@ type User struct {
 	Name     string
 	Username string `gorm:"unique"`
 	Age      json.Number
+	Role     bool      `gorm:"default:0"`
 	Articles []Article `gorm:"foreignKey:user_id"'`
 }
